@@ -40,3 +40,4 @@ output/
 .playwright-cli/
 .DS_Store
 Thumbs.db
+.workbuddy/
