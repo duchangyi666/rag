@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="FinSight AI 金融理财咨询客服，基于金融知识库与大模型提供智能问答。"
+    />
+    <title>FinSight AI · 金融理财咨询</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b1f1a'/%3E%3Cpath d='M13 45 26 30l9 8 16-22M40 16h11v11' fill='none' stroke='%234fe0ae' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div class="grid-overlay"></div>
+
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="img">
+              <path d="M9 35 18 24l7 6 14-18" />
+              <path d="M31 12h8v8" />
+              <path d="M9 40h30" />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-name">FinSight <span>AI</span></div>
+            <div class="brand-subtitle">财富洞察智能中枢</div>
+          </div>
+        </div>
+
+        <button class="new-chat-button" id="newChatButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          发起新咨询
+          <span class="shortcut">⌘ K</span>
+        </button>
+
+        <nav class="conversation-nav" aria-label="咨询记录">
+          <div class="nav-label">最近咨询</div>
+          <div class="conversation-list" id="conversationList"></div>
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+
+        <div class="security-card">
+          <div class="security-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          </div>
+          <div>
+            <strong>隐私安全守护</strong>
+            <p>对话记录仅保存在当前浏览器</p>
+          </div>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">Z</div>
+          <div class="profile-copy">
+            <strong>尊享用户</strong>
+            <small>标准咨询服务</small>
+          </div>
+          <button class="icon-button" type="button" aria-label="更多选项">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="5" cy="12" r="1" />
+              <circle cx="12" cy="12" r="1" />
+              <circle cx="19" cy="12" r="1" />
+            </svg>
+          </button>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <button class="menu-button" id="menuButton" type="button" aria-label="打开导航">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+          <div class="topbar-title">
+            <div class="status-orb">
+              <span></span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3 4.5 7.2v9.6L12 21l7.5-4.2V7.2Z" />
+                <path d="m8.5 12 2.2 2.2 4.8-5" />
+              </svg>
+            </div>
+            <div>
+              <span class="topbar-kicker">PRIVATE WEALTH INTELLIGENCE</span>
+              <h1>金融智能顾问</h1>
+              <p><span class="online-dot"></span><span id="serviceStatus">正在连接服务</span></p>
+            </div>
+          </div>
+          <div class="topbar-context" aria-label="系统能力">
+            <span><i></i>专业知识增强</span>
+            <span><i></i>实时流式分析</span>
+            <span><i></i>风险边界约束</span>
+          </div>
+          <div class="topbar-actions">
+            <div class="model-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 3h6v3H9zM7 8h10a3 3 0 0 1 3 3v7H4v-7a3 3 0 0 1 3-3Z" />
+                <path d="M8 13h.01M16 13h.01M9 18v3m6-3v3" />
+              </svg>
+              FinRAG Pro
+            </div>
+            <button class="icon-button bordered" id="clearButton" type="button" aria-label="清空对话">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 6h18M8 6V4h8v2m3 0-1 15H6L5 6m5 4v7m4-7v7" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="main-grid">
+          <section class="chat-panel" aria-label="智能咨询对话">
+            <div class="messages" id="messages" aria-live="polite">
+              <div class="welcome-block" id="welcomeBlock">
+                <div class="ai-emblem">
+                  <div class="emblem-ring"></div>
+                  <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M32 9 13 20v24l19 11 19-11V20Z" />
+                    <path d="M23 36V25m9 11V19m9 17v-7" />
+                    <circle cx="23" cy="25" r="2" />
+                    <circle cx="32" cy="19" r="2" />
+                    <circle cx="41" cy="29" r="2" />
+                  </svg>
+                </div>
+                <div class="eyebrow">FINANCIAL INTELLIGENCE, REDEFINED</div>
+                <h2>您好，我是您的<br /><span>金融智能顾问</span></h2>
+                <p>
+                  基于专业金融知识库与智能检索，为您解答投资常识、产品规则与风险管理等问题。
+                </p>
+                <div class="hero-capabilities" aria-label="核心能力">
+                  <span><i class="capability-dot"></i>知识库增强</span>
+                  <span><i class="capability-dot"></i>实时流式响应</span>
+                  <span><i class="capability-dot gold"></i>严格风险边界</span>
+                </div>
+
+                <div class="suggestions" id="suggestions">
+                  <button class="suggestion-card" type="button" data-question="新手应该如何开始做资产配置？">
+                    <span class="suggestion-icon emerald">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 19V9m5 10V5m5 14v-7m5 7V3" />
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>资产配置</strong>
+                      <small>新手应该如何开始做资产配置？</small>
+                    </span>
+                    <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </button>
+                  <button class="suggestion-card" type="button" data-question="如何判断自己的风险承受能力？">
+                    <span class="suggestion-icon gold">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+                        <path d="M12 8v4m0 4h.01" />
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>风险评估</strong>
+                      <small>如何判断自己的风险承受能力？</small>
+                    </span>
+                    <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </button>
+                  <button class="suggestion-card" type="button" data-question="基金定投有哪些需要注意的原则？">
+                    <span class="suggestion-icon blue">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 17 9 12l4 3 7-9" />
+                        <path d="M15 6h5v5" />
+                      </svg>
+                    </span>
+                    <span>
+                      <strong>基金知识</strong>
+                      <small>基金定投有哪些需要注意的原则？</small>
+                    </span>
+                    <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="composer-wrap">
+              <div class="composer" id="composer">
+                <textarea
+                  id="messageInput"
+                  rows="1"
+                  maxlength="2000"
+                  placeholder="输入您的金融问题..."
+                  aria-label="咨询问题"
+                ></textarea>
+                <div class="composer-footer">
+                  <div class="composer-hint">
+                    <span class="sparkle">✦</span>
+                    支持多轮追问 · Enter 发送
+                  </div>
+                  <button class="send-button" id="sendButton" type="button" aria-label="发送消息">
+                    <svg class="send-icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m22 2-7 20-4-9-9-4Z" />
+                      <path d="M22 2 11 13" />
+                    </svg>
+                    <svg class="stop-icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <rect x="7" y="7" width="10" height="10" rx="1" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <p class="disclaimer">
+                AI 回答仅供金融知识参考，不构成任何投资建议。市场有风险，决策需谨慎。
+              </p>
+            </div>
+          </section>
+
+          <aside class="insight-panel">
+            <div class="insight-heading">
+              <span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3 4.5 7.2v9.6L12 21l7.5-4.2V7.2Z" />
+                  <path d="M9 12h6M12 9v6" />
+                </svg>
+              </span>
+              <div>
+                <strong>智能分析链路</strong>
+                <small>实时展示回答生成过程</small>
+              </div>
+            </div>
+
+            <div class="pipeline" id="pipeline">
+              <div class="pipeline-line"><span id="pipelineProgress"></span></div>
+              <div class="pipeline-step" data-step="faq">
+                <span class="step-dot"><b>1</b></span>
+                <div>
+                  <strong>FAQ 快速匹配</strong>
+                  <small>毫秒级知识库检索</small>
+                </div>
+                <span class="step-status">待命</span>
+              </div>
+              <div class="pipeline-step" data-step="intent">
+                <span class="step-dot"><b>2</b></span>
+                <div>
+                  <strong>意图智能识别</strong>
+                  <small>理解您的咨询方向</small>
+                </div>
+                <span class="step-status">待命</span>
+              </div>
+              <div class="pipeline-step" data-step="retrieval">
+                <span class="step-dot"><b>3</b></span>
+                <div>
+                  <strong>专业资料召回</strong>
+                  <small>向量与关键词混合检索</small>
+                </div>
+                <span class="step-status">待命</span>
+              </div>
+              <div class="pipeline-step" data-step="rerank">
+                <span class="step-dot"><b>4</b></span>
+                <div>
+                  <strong>相关性精排</strong>
+                  <small>筛选高质量参考依据</small>
+                </div>
+                <span class="step-status">待命</span>
+              </div>
+              <div class="pipeline-step" data-step="generation">
+                <span class="step-dot"><b>5</b></span>
+                <div>
+                  <strong>可信回答生成</strong>
+                  <small>结合上下文流式输出</small>
+                </div>
+                <span class="step-status">待命</span>
+              </div>
+            </div>
+
+            <div class="coverage-card">
+              <div class="coverage-top">
+              <div>
+                <span class="section-kicker">KNOWLEDGE COVERAGE</span>
+                  <strong>核心知识范围</strong>
+                </div>
+                <span class="coverage-value">持续更新</span>
+              </div>
+              <div class="coverage-bars">
+                <div>
+                  <span>交易常识</span><i><b style="width: 100%"></b></i><em>已接入</em>
+                </div>
+                <div>
+                  <span>产品说明</span><i><b style="width: 100%"></b></i><em>已接入</em>
+                </div>
+                <div>
+                  <span>风险教育</span><i><b style="width: 100%"></b></i><em>已接入</em>
+                </div>
+              </div>
+              <p>根据当前已接入资料目录展示，仅表示知识库中存在相关内容。</p>
+            </div>
+
+            <div class="risk-note">
+              <span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3 2 21h20Z" />
+                  <path d="M12 9v5m0 3h.01" />
+                </svg>
+              </span>
+              <div>
+                <strong>理性投资提示</strong>
+                <p>不承诺收益，不预测涨跌；重要决策请咨询持牌专业人士。</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>

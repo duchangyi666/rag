@@ -1,0 +1,134 @@
+[log]
+# --- Logger identity ---
+# Logger 名称，其他模块通过 logging.getLogger(__name__) 继承此前缀
+name = fin_rag
+
+# --- Log levels (DEBUG, INFO, WARNING, ERROR, CRITICAL) ---
+# 控制台处理器级别
+console_level = INFO
+# 文件处理器级别（通常比控制台更详细，用于问题排查和审计追溯）
+file_level = DEBUG
+
+# --- Output destination ---
+# 日志目录（相对于项目根目录，由 config.py 解析为绝对路径）
+log_dir = logs
+# 日志文件名（RotatingFileHandler 轮转时自动添加 .1, .2, ... 后缀）
+log_filename = app.log
+
+# --- Console output toggle ---
+# 是否启用控制台输出（生产环境 daemon 模式可设为 false）
+enable_console = true
+
+# --- Log format ---
+# 格式字段: 毫秒时间戳 - 级别 - logger名 - [线程名] - 文件名:函数名:行号 - 消息
+log_format = %(asctime)s.%(msecs)03d - %(levelname)s - %(name)s - [%(threadName)s] - %(filename)s:%(funcName)s:%(lineno)d - %(message)s
+date_format = %Y-%m-%d %H:%M:%S
+
+# --- Log rotation (RotatingFileHandler) ---
+# 单个日志文件最大大小（MB），超过后自动轮转
+max_bytes_mb = 10
+# 保留的历史日志文件数量（app.log + app.log.1 ~ app.log.7 = 共 8 个文件）
+backup_count = 7
+# 日志文件编码（utf-8 确保中文金融文本正确写入）
+encoding = utf-8
+# MySQL 配置
+[mysql]
+host = localhost
+user = root
+password = YOUR_PASSWORD
+database = fine_db
+
+# Redis 配置
+[redis]
+host = localhost
+port = 6379
+password = YOUR_PASSWORD
+db = 0
+ex = 86400
+
+# BM25 检索配置
+[bm25]
+# --- 检索阈值 ---
+# softmax 后 top-1 概率阈值 [0, 1]，低于此值视为未命中，转交 RAG
+threshold = 0.85
+# BM25 词频饱和参数，越大高频词权重越高（标准值 1.2～2.0）
+k1 = 1.5
+# BM25 文档长度归一化参数，0=不考虑长度，1=完全归一化（标准值 0.75）
+b = 0.75
+# softmax 温度系数，<1 使分布更尖锐（更严格），>1 更平滑（更宽容）
+# 400 条语料建议 0.15~0.3，越大阈值越难达到
+softmax_temperature = 0.2
+# 最佳 FAQ 至少覆盖 60% 的有效查询词；代词、语气词不计入有效词
+min_token_coverage = 0.6
+
+# Milvus 配置
+[milvus]
+host = localhost
+port = 19530
+# 当前金融知识库实际写入位置（407 个向量子块）
+database_name = financial_customer_service
+collection_name = financial_knowledge_chunks_v1
+
+# 模型路径配置（相对于项目根目录，由 config.py 解析为绝对路径）
+[models]
+# 模型根目录
+models_dir = rag_qa/models
+# BGE-M3 向量化模型
+embedding_model = rag_qa/models/bge-m3
+# BGE Reranker 重排序模型
+reranker_model = rag_qa/models/bge-reranker-large
+# 向量维度（BGE-M3 输出 1024 维）
+embedding_dim = 1024
+
+# 检索相关性保护：低于该 CrossEncoder 分数的结果不进入回答上下文
+[retrieval]
+rerank_min_score = 0.005
+
+# LLM 配置
+[llm]
+model = glm-4.5-air
+llm_base_url = https://open.bigmodel.cn/api/paas/v4/
+api_key = YOUR_API_KEY
+
+# BERT 模型训练与推理配置
+[bert]
+# 预训练模型名称
+pre_trained_model_name = bert-base-chinese
+# 模型保存目录名
+model_path = bert_query_classifier
+# 分类标签数量
+num_labels = 2
+# 文本最大长度
+max_length = 128
+# 训练集和验证集划分比例
+test_size = 0.2
+# 随机种子
+random_state = 42
+# 训练输出目录
+output_dir = bert_results
+# 最多保存的检查点数量
+save_total_limit = 1
+# 训练轮次
+num_train_epochs = 3
+# 训练批次大小
+per_device_train_batch_size = 8
+# 评估批次大小
+per_device_eval_batch_size = 8
+# 学习率预热步数
+warmup_steps = 500
+# 权重衰减系数
+weight_decay = 0.01
+# 日志目录
+logging_dir = ./bert_logs
+# 日志记录步数
+logging_steps = 10
+# 评估策略
+evaluation_strategy = epoch
+# 保存策略
+save_strategy = epoch
+# 训练结束后是否加载最佳模型
+load_best_model_at_end = True
+# 判断最佳模型的指标
+metric_for_best_model = eval_loss
+# 是否使用FP16混合精度训练
+fp16 = False

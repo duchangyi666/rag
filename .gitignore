@@ -1,0 +1,42 @@
+# ===== 敏感配置（含 API Key / 密码，请勿提交）=====
+config.ini
+*.env
+.env.*
+
+# ===== 数据与模型（大文件，勿入库）=====
+data/
+rag_qa/models/
+*.bin
+*.pth
+*.pt
+*.ckpt
+*.h5
+*.onnx
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# ===== 训练 / 运行产物 =====
+tmp_trainer/
+bert_results/
+bert_logs/
+output/
+*.log
+
+# ===== 编辑器 / 工具 =====
+.idea/
+.vscode/
+.claude/
+.agents/
+.playwright-cli/
+.DS_Store
+Thumbs.db
