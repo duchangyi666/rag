@@ -37,7 +37,7 @@ output/
 .vscode/
 .claude/
 .agents/
-.playwright-cli/
+
 .DS_Store
 Thumbs.db
 .workbuddy/
